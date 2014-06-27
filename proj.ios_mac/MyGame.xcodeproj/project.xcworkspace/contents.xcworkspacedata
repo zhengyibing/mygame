@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:"
+      name = "group1">
+      <FileRef
+         location = "self:MyGame.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../xcode_workspace/empty/empty.xcodeproj">
+      </FileRef>
+   </Group>
+</Workspace>
