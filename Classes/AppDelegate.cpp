@@ -1,7 +1,6 @@
 #include "AppDelegate.h"
 #include "Splash.h"
 #include "Test.h"
-
 USING_NS_CC;
 
 AppDelegate::AppDelegate() {
@@ -19,14 +18,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
     if(!glview) {
         glview = GLView::create("My Game");
         director->setOpenGLView(glview);
-		director->getOpenGLView()->setFrameSize(400, 640);
+//		director->getOpenGLView()->setFrameSize(400, 640);
 	}
 
     // turn on display FPS
     director->setDisplayStats(true);
-
+  Size frameSize = director->getOpenGLView()->getFrameSize();
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
+  director->getOpenGLView()->setDesignResolutionSize(720, 1280, ResolutionPolicy::NO_BORDER);
 //    director->set
     // create a scene. it's an autorelease object
     auto scene = Splash::scene();

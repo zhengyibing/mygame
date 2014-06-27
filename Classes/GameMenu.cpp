@@ -9,7 +9,7 @@
 #include "GameMenu.h"
 
 USING_NS_CC;
-
+using namespace std;
 Scene* GameMenu::scene()
 {
   Scene* scene = Scene::create();
@@ -29,32 +29,55 @@ bool GameMenu::init()
   }
   
   Sprite* bg = Sprite::create("img/bg.png");
-  bg->setPosition(originSize.width/2,originSize.height/2);
-  bg->setScale(MAX(winSize.width/bg->getContentSize().width, winSize.height/bg->getContentSize().height));
+  bg->setAnchorPoint(Point(0,0));
+  bg->setPosition(originPoint.x,originPoint.y+10);
+//  bg->setScale(0.5);
   this->addChild(bg);
   
-  Sprite* fbTitle = Sprite::create("img/flappybird.png");
-  fbTitle->setPosition(originSize.width/2,originSize.height/4);
-  this->addChild(fbTitle);
+  LayerColor* content = LayerColor::create(Color4B(255,255,255,0));
+  this->addChild(content);
+//  content->setPosition(originSize.width/2,originSize.height/2);
+//  content->setContentSize(Size(originSize.width/2,originSize.height/2));
   
-  Sprite* bird = Sprite::create();
-  bird->setPosition(originSize.width/2,originSize.height/2);
-  this->addChild(bird);
+  
+  Sprite* fbTitle = Sprite::create("img/flappybird.png");
+  fbTitle->setPosition(originSize.width/2,originSize.height/4*3);
+  content->addChild(fbTitle);
+  Sprite* bird = Sprite::create("img/bird1.png");
+  bird->setPosition(originSize.width/2+85,originSize.height/2+100);
+  content->addChild(bird);
   
 //  vect<Animation*> *animations = new vect<Animation*>();
 //  animations->add
-  Animation* animation = Animation::create();
+  Animation* flyAnimation = Animation::create();
   for (int i = 1; i<=3; i++) {
     char frameName[100] = {0};
     sprintf(frameName, "img/bird%d.png",i);
-    animation->addSpriteFrameWithFile(frameName);
-    log("img:%s--111:%s",frameName,"hahha");
+    flyAnimation->addSpriteFrameWithFile(frameName);
   }
-  animation->setDelayPerUnit(0.2f);
-  animation->setRestoreOriginalFrame(false);
-  Animate* animate = Animate::create(animation);
-  auto repeat = RepeatForever::create(animate);
+  flyAnimation->setDelayPerUnit(0.2f);
+  flyAnimation->setRestoreOriginalFrame(false);
+  Animate* flayAnimate = Animate::create(flyAnimation);
+  MoveBy* updownAct = MoveBy::create(0.3, Point(0,5));
+  MoveBy* updownRev = updownAct->reverse();
+  Sequence* updown = Sequence::create(updownAct,updownRev ,NULL);
+  auto repeat = RepeatForever::create(Spawn::create(updown,flayAnimate,NULL));
   bird->runAction(repeat);
+  
+  Sprite* rate = Sprite::create("img/rate.png");
+  rate->setPosition(bird->getPosition()-(fbTitle->getPosition()-bird->getPosition()));
+  content->addChild(rate);
+  
+  Sprite* grade = Sprite::create("img/grade.png");
+  content->addChild(grade);
+  
+  Sprite* start = Sprite::create("img/start.png");
+  content->addChild(start);
+  printf("content width:%f  height:%f",bg->getContentSize().width,bg->getContentSize().height);
+  printf("framesize width:%f  height:%f",Director::getInstance()->getOpenGLView()->getFrameSize().width,Director::getInstance()->getOpenGLView()->getFrameSize().height);
+  printf("winsize width:%f  height:%f",Director::getInstance()->getWinSize().width,Director::getInstance()->getWinSize().height);
+  printf("visible width:%f  height:%f",originSize.width,originSize.height);
+  printf("scaleFactor,%f",Director::getInstance()->getContentScaleFactor());
   
   return true;
 }
